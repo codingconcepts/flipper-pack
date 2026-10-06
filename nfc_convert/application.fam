@@ -1,0 +1,12 @@
+App(
+    appid="nfc_convert",
+    name="NTAG Convert",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="nfc_convert_app",
+    requires=["gui"],
+    stack_size=4 * 1024,
+    fap_category="NFC",
+    fap_icon="nfc_convert.png",  # 10x10 1-bit PNG
+    fap_description="Retype a saved NTAG dump between NTAG213/215/216 layouts.",
+    fap_version="1.0",
+)

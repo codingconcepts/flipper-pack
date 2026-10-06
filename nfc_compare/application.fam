@@ -1,0 +1,12 @@
+App(
+    appid="nfc_compare",
+    name="NFC Compare",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="nfc_compare_app",
+    requires=["gui"],
+    stack_size=4 * 1024,
+    fap_category="NFC",
+    fap_icon="nfc_compare.png",  # 10x10 1-bit PNG
+    fap_description="Scan two cards in turn and report whether their data matches.",
+    fap_version="1.0",
+)
