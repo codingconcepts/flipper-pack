@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the 10x10 1-bit FAP icons for the three NFC apps.
+"""Generate the 10x10 1-bit FAP icons for the three apps.
 
 Drawing them as text grids keeps them editable; at this size a paint program is
 more trouble than it is worth. '#' is a lit pixel -- the SDK's png2xbm sets a
@@ -8,8 +8,8 @@ bit wherever the source pixel is black.
 from PIL import Image
 
 ICONS = {
-    # Card outline with a question mark: identify what this card is.
-    "nfc_ident/nfc_ident.png": """
+    # Card outline with a question mark: identify what this tag is.
+    "tag_ident/tag_ident.png": """
         ##########
         #..####..#
         #.##..##.#

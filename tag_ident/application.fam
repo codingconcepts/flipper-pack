@@ -1,0 +1,12 @@
+App(
+    appid="tag_ident",
+    name="Tag Ident",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="tag_ident_app",
+    requires=["gui"],
+    stack_size=4 * 1024,
+    fap_category="NFC",
+    fap_icon="tag_ident.png",  # 10x10 1-bit PNG
+    fap_description="Identify a tag on either band - HF 13.56MHz NFC or LF 125kHz RFID - or fingerprint an NFC reader.",
+    fap_version="2.0",
+)

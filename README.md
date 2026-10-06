@@ -4,9 +4,11 @@ A pack of useful apps for the Flipper Zero that aren't included in popular firmw
 
 | App | Category | What it does |
 | --- | --- | --- |
-| NFC Ident (`nfc_ident`) | NFC | Identify an NFC card's type/variant, or fingerprint an NFC reader. |
+| Tag Ident (`tag_ident`) | NFC | Identify a tag on either band - HF 13.56 MHz NFC or LF 125 kHz RFID - or fingerprint an NFC reader. |
 | NTAG Convert (`nfc_convert`) | NFC | Retype a saved NTAG dump between NTAG213/215/216 layouts. |
 | NFC Compare (`nfc_compare`) | NFC | Scan two cards in turn and report whether their data matches. |
+
+The two bands are separate radios with separate antennas, so Tag Ident's **Identify Tag** can only listen on one at a time: it sweeps between HF and LF until something answers, which is why an unknown tag can take a few seconds to come back. **Detect Reader** is HF-only.
 
 ## Requirements
 
@@ -34,16 +36,15 @@ The first build downloads the Flipper SDK and ARM toolchain into `~/.ufbt` (a fe
 Build one app:
 
 ```bash
-cd nfc_ident
-ufbt
+(cd tag_ident && ufbt)
 ```
 
-The result lands in `nfc_ident/dist/nfc_ident.fap`.
+The result lands in `tag_ident/dist/tag_ident.fap`.
 
 Or build all three:
 
 ```bash
-for app in nfc_ident nfc_convert nfc_compare; do (cd "$app" && ufbt); done
+for app in tag_ident nfc_convert nfc_compare; do (cd "$app" && ufbt); done
 ```
 
 ### 3. Put them on the Flipper
@@ -51,12 +52,23 @@ for app in nfc_ident nfc_convert nfc_compare; do (cd "$app" && ufbt); done
 **Over USB (easiest).** Plug the Flipper in, close qFlipper and the Flipper CLI first (only one thing can hold the serial port), then run from inside the app's own directory:
 
 ```bash
-(cd nfc_ident && ufbt launch)
+(cd tag_ident && ufbt launch)
 ```
 
 This uploads the FAP to the SD card and starts it on the device.
 
 ufbt acts on whichever app's `application.fam` is in the current directory, so every `ufbt` command has to be run from an app directory - not from the repo root. From the root it reports `missing manifest (application.fam)` and, for `launch`, `More than one app is runnable`. There is no `APPID=` shortcut for this.
+
+**All three over USB.** `ufbt launch` works on one app and starts it on the device, so it doesn't loop well. To upload all three without starting any of them, use the storage script that ships with the SDK. Run this from the repo root, with the apps already built:
+
+```bash
+eval `ufbt -s env`
+for app in tag_ident nfc_convert nfc_compare; do
+  python3 ~/.ufbt/current/scripts/storage.py send "$app/dist/$app.fap" "/ext/apps/NFC/$app.fap"
+done
+```
+
+The `eval` line is ufbt's own way of putting the toolchain on `PATH`, which matters here because `storage.py` needs Python 3.10+ - the system `python3` on macOS is 3.9 and fails with a `TypeError` on a `str | bytes` annotation. The toolchain ships 3.11.
 
 **By SD card.** Copy each `dist/*.fap` to `/ext/apps/NFC/` on the Flipper's SD card - either by dragging it there in [qFlipper](https://flipperzero.one/update)'s file browser, or by putting the SD card in your computer and copying to `apps/NFC/`.
 
